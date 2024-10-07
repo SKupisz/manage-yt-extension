@@ -1,2 +1,6 @@
 extension/node_modules/
 extension/dist
+backend/.env
+backend/venv
+backend/__pycache__
+.DS_Store

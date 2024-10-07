@@ -1,0 +1,44 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pytubefix import YouTube
+from pytubefix.cli import on_progress
+from dotenv import load_dotenv, dotenv_values
+import os
+
+load_dotenv()
+
+origins = ['*']
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*']
+)
+
+SAVE_PATH=os.getenv("SAVING_PATH")
+
+@app.get('/')
+async def root():
+    return {'status': 'running'}
+
+@app.post('/download/{videoId}')
+async def download(videoId: str):
+    link = "https://www.youtube.com/watch?v="+videoId
+    print(link)
+
+    try:
+        yt = YouTube(link, on_progress_callback = on_progress)
+        ys = yt.streams.get_highest_resolution()
+        ys.download()
+        return {
+            'status': 'success'
+        }
+    except Exception as e:
+        return {
+            'status': 'failed',
+            'error': str(e)
+        }

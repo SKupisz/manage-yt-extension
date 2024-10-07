@@ -5,10 +5,10 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-    console.log(message);
     if(message.action === 'videoAddress'){
         currentVideoAddr = message.address;
         console.log(message.address);
+        chrome.runtime.sendMessage({action: 'videoAddressGotten', address: currentVideoAddr})
         sendResponse({});
     }
     else if(message.action === 'getVideoAddress'){
