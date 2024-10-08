@@ -13,3 +13,14 @@ This is the repo of the Google Chrome extension for downloading the videos from 
 2. `cd manageYTChromeExtension`
 3. Run `chmod +x setup.sh`
 4. Run `./setup.sh` (in case you are using Linux/Mac OS)
+
+
+## How to run
+
+1. `cd backend`
+2. `uvicorn main:app --reload`
+3. Open your browser
+4. Go to `chrome://extensions`
+5. Enable the developer mode
+6. Click `load unpacked`
+7. Select the `extension` directory
