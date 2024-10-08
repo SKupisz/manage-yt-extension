@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pytubefix import YouTube
 from pytubefix.cli import on_progress
 from dotenv import load_dotenv, dotenv_values
-from pync import Notifier
+from pydantic import BaseModel
 import subprocess
 import os
 
@@ -23,13 +23,21 @@ app.add_middleware(
 
 SAVE_PATH=os.getenv("SAVING_PATH")
 
+class VideoData(BaseModel):
+    videoType: str
+
 @app.get('/')
 async def root():
     return {'status': 'running'}
 
 @app.post('/download/{videoId}')
-async def download(videoId: str):
-    link = "https://www.youtube.com/watch?v="+videoId
+async def download(videoId: str, data: VideoData):
+    link = "https://www.youtube.com/"
+    if data.videoType == 'shorts':
+        link += 'shorts/'
+    else:
+        link += 'watch?v='
+    link += videoId
     print(link)
 
     try:
