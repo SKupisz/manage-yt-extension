@@ -43,7 +43,7 @@ async def download(videoId: str, data: VideoData):
     try:
         yt = YouTube(link, on_progress_callback = on_progress)
         ys = yt.streams.get_highest_resolution()
-        ys.download()
+        ys.download(output_path=SAVE_PATH)
         script = 'display notification "Your video has been downloaded!" with title "Manage YT Chrome Extension"'
         subprocess.run(["osascript", "-e", script])
         return {
