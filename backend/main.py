@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pytubefix import YouTube
 from pytubefix.cli import on_progress
 from dotenv import load_dotenv, dotenv_values
+from pync import Notifier
+import subprocess
 import os
 
 load_dotenv()
@@ -34,10 +36,14 @@ async def download(videoId: str):
         yt = YouTube(link, on_progress_callback = on_progress)
         ys = yt.streams.get_highest_resolution()
         ys.download()
+        script = 'display notification "Your video has been downloaded!" with title "Manage YT Chrome Extension"'
+        subprocess.run(["osascript", "-e", script])
         return {
             'status': 'success'
         }
     except Exception as e:
+        script = 'display notification "We failed to download your video! Try again" with title "Manage YT Chrome Extension"'
+        subprocess.run(["osascript", "-e", script])
         return {
             'status': 'failed',
             'error': str(e)
