@@ -17,33 +17,43 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-document.getElementById('downloadButton')?.addEventListener('click', () => {
-    const triggerDownloading = async() => {
-        try {
-            const result = await fetch('http://localhost:8000/download/'+videoAddress, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    videoType: videoType ?? '',
-                })
-            });
-            const json = await result.json();
-            console.log(json);
-        } catch(error) {
-            console.log('error: ', error);
-        }
+const triggerDownloading = async(onlyAudio: boolean) => {
+    try {
+        const result = await fetch('http://localhost:8000/download/'+videoAddress, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                videoType: videoType ?? '',
+                onlyAudio,
+            })
+        });
+        const json = await result.json();
+        console.log(json);
+    } catch(error) {
+        console.log('error: ', error);
     }
+}
+
+const downloadingProcedure = (onlyAudio: boolean) => {
     if(videoAddress !== null){
         chrome.runtime.sendMessage({action: 'getVideoAddress'}, (response) => {
             if(response.address) {
                 videoAddress = response.address;
                 videoType = response.videoType;
             }
-            triggerDownloading();
+            triggerDownloading(onlyAudio);
         });
     } else {
-        triggerDownloading();
+        triggerDownloading(onlyAudio);
     }
+};
+
+document.getElementById('downloadButtonVideo')?.addEventListener('click', () => {
+    downloadingProcedure(false);
+});
+
+document.getElementById('downloadbuttonAudio')?.addEventListener('click', () => {
+    downloadingProcedure(true);
 });

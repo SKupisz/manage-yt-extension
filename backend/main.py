@@ -25,6 +25,7 @@ SAVE_PATH=os.getenv("SAVING_PATH")
 
 class VideoData(BaseModel):
     videoType: str
+    onlyAudio: bool
 
 @app.get('/')
 async def root():
@@ -42,9 +43,15 @@ async def download(videoId: str, data: VideoData):
     try:
         yt = YouTube(link, on_progress_callback = on_progress)
         ys = yt.streams.get_highest_resolution()
-        ys.download(output_path=SAVE_PATH)
+        output_file = ys.download(output_path=SAVE_PATH)
         script = 'display notification "Your video has been downloaded!" with title "Manage YT Chrome Extension"'
         subprocess.run(["osascript", "-e", script])
+
+        if data.onlyAudio :
+            base, ext = os.path.splitext(output_file)
+            audio_file = base + '.mp3'
+            os.rename(output_file, audio_file)
+
         return {
             'status': 'success'
         }
