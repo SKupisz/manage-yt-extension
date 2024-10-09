@@ -24,3 +24,8 @@ This is the repo of the Google Chrome extension for downloading the videos from 
 5. Enable the developer mode
 6. Click `load unpacked`
 7. Select the `extension` directory
+
+## How to run
+
+1. `cd backend`
+2. `uvicorn main:app --reload`

@@ -8,6 +8,9 @@ echo "Installing packages needed for the backend..."
 pip install pytubefix pytube fastapi dotenv
 touch .env
 
+read -p "Enter the video saving directory: " dir
+echo SAVING_PATH=dir >> .env
+
 echo "Backend setup finished..."
 
 cd ../extension

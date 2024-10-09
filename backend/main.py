@@ -38,7 +38,6 @@ async def download(videoId: str, data: VideoData):
     else:
         link += 'watch?v='
     link += videoId
-    print(link)
 
     try:
         yt = YouTube(link, on_progress_callback = on_progress)
